@@ -11,9 +11,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Push to Hugging Face
+      - name: Push to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
         run: |
-          # මෙතන 'kalharap84/Krishi-AI-Server'
-          git push --force git push --force https://Kalharapasan:$HF_TOKEN@huggingface.co/spaces/Kalharapasan/Krishi-AI-Server main
+          set -e
+          if [ -z "$HF_TOKEN" ] || [ -z "$HF_USERNAME" ] || [ -z "$HF_SPACE" ]; then
+            echo "ERROR: Please set HF_TOKEN, HF_USERNAME and HF_SPACE in repository Secrets."
+            exit 1
+          fi
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote add hf https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE
+          git push --force hf HEAD:main
