@@ -2,6 +2,5 @@ venv/
 
 # Environment files
 # Ignore local .env and any env variants, but keep an example file tracked
-.env
-.env.*
+
 !.env.example
