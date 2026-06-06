@@ -15,5 +15,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # මෙතන 'kalharap84/Krishi-AI-Server' වෙනුවට ඔයාගේ HF username සහ Space එකේ නම දාන්න
+          # මෙතන 'kalharap84/Krishi-AI-Server'
           git push --force git push --force https://Kalharapasan:$HF_TOKEN@huggingface.co/spaces/Kalharapasan/Krishi-AI-Server main
