@@ -11,7 +11,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Push to Hugging Face Spaces
+          lfs: true # ඔයාගේ ප්‍රොජෙක්ට් එකේ ලොකු ෆයිල්ස්/මොඩල්ස් තියෙනවා නම් මේක අනිවාර්යයි
+
+      - name: Install Hugging Face Hub & Push
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
@@ -22,7 +24,18 @@ jobs:
             echo "ERROR: Please set HF_TOKEN, HF_USERNAME and HF_SPACE in repository Secrets."
             exit 1
           fi
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git remote add hf https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE
-          git push --force hf HEAD:main
+          
+          # huggingface_hub ලයිබ්‍රරි එක ඉන්ස්ටෝල් කිරීම
+          pip install huggingface_hub
+          
+          # පයිතන් ස්ක්‍රිප්ට් එකක් මඟින් ෆෝල්ඩර් එක කෙලින්ම අප්ලෝඩ් කිරීම
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi(token='$HF_TOKEN')
+          api.upload_folder(
+              folder_path='.',
+              repo_id='$HF_USERNAME/$HF_SPACE',
+              repo_type='space',
+              ignore_patterns=['.git*', '.github*']
+          )
+          "
