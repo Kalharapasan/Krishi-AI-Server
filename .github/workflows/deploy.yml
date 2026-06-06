@@ -27,13 +27,23 @@ jobs:
           
           pip install huggingface_hub
           
-          python -c "
+          # පයිතන් කෝඩ් එක ආරක්ෂිතව Heredoc (<< 'EOF') ක්‍රමයට ලිවීම
+          python << 'EOF'
+          import os
           from huggingface_hub import HfApi
-          api = HfApi(token='$HF_TOKEN')
+          
+          # Environment variables වලින් විස්තර ලබාගැනීම
+          hf_token = os.getenv("HF_TOKEN")
+          repo_id = f"{os.getenv('HF_USERNAME')}/{os.getenv('HF_SPACE')}"
+          
+          print(f"Deploying to Hugging Face Space: {repo_id}")
+          
+          api = HfApi(token=hf_token)
           api.upload_folder(
               folder_path='.',
-              repo_id='$HF_USERNAME/$HF_SPACE',
+              repo_id=repo_id,
               repo_type='space',
               ignore_patterns=['.git*', '.github*']
           )
-          "
+          print("Deployment successful!")
+          EOF

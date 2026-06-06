@@ -6,5 +6,6 @@ python-multipart
 Pillow
 python-dotenv
 grad-cam
+pytorch-grad-cam
 opencv-python-headless
 psycopg2-binary
